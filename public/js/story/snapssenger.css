@@ -1,0 +1,77 @@
+.stories.snapssenger.list .story > .item-link {
+  text-decoration: none;
+  color: #333;
+}
+
+.stories.snapssenger.list .story > .item-link > .item-preview {
+  border-radius: 50%;
+  padding: 3px; /* Slight padding for the gradient border */
+  background: conic-gradient(#f99, #f9f, #ff9, #9ff, #99f, #f99); /* Instagram-style gradient */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stories.snapssenger.list .story > .item-link > .item-preview img {
+  width: 100%; /* Ensures the image fits within the preview */
+  height: 100%; /* Keeps the image proportional */
+  border-radius: 50%;
+  border: 2px solid #fff; /* White inner border to separate image from gradient */
+  box-sizing: border-box;
+}
+
+.stories.snapssenger.list .story.seen {
+  opacity: 0.75;
+}
+
+.stories.snapssenger.list .story.seen > a > span {
+  background: #999;
+  color: #999;
+}
+
+.stories.snapssenger.list .story.seen > a {
+  color: #999 !important;
+}
+
+.stories.snapssenger.carousel .story {
+  max-height: 160px;
+  max-width: 110px;
+  width: 25vw;
+}
+
+.stories.snapssenger.carousel .story > .item-link {
+  text-decoration: none;
+  text-align: left;
+  color: #fff;
+  position: relative;
+  max-height: 160px;
+}
+
+.stories.snapssenger.carousel .story > .item-link > .item-preview img {
+  border-radius: 5px;
+  position: absolute;
+}
+
+.stories.snapssenger.carousel .story > .item-link > .info {
+  top: auto;
+  height: auto;
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.35), 1px 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.stories.snapssenger.carousel .story > .item-link > .info .name {
+  font-weight: bold;
+}
+
+.stories.snapssenger.carousel .story > .item-link > .info .time {
+  display: block;
+  font-weight: 100;
+  font-size: 11px;
+}
