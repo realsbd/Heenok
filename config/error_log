@@ -1,0 +1,4 @@
+[23-Oct-2024 16:06:10 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/agleaus/public_html/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/agleaus/public_html/config/database.php on line 18
