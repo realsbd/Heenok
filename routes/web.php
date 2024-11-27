@@ -841,7 +841,7 @@ Route::group(['middleware' => 'private.content'], function() {
  Route::post('payment/stripe/charge', [StripeController::class, 'charge']);
 
 // Vpay Payment
-Route::post('/payment/redirect', [\App\Http\Controllers\VpayController::class,'redirectToGateway']);
+Route::post('/payment/redirect', [\App\Http\Controllers\VpayController::class,'redirectToGateway'])->name('payment.redirect');
 Route::post('/payment/callback', [\App\Http\Controllers\VpayController::class,'callback']);
 
 

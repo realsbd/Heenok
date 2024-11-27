@@ -278,6 +278,14 @@
 
 @section('javascript')
 <script type="text/javascript">
+  $('input[name=payment_gateway]').on('change', function() {
+  if ($(this).val() === 'Vpay') {
+    $('#formAddFunds').attr('action', '{{ url("payment/redirect") }}');
+  } else {
+    $('#formAddFunds').attr('action', '{{ url("add/funds") }}');
+  }
+});
+
 @if (in_array(config('settings.currency_code'), config('currencies.zero-decimal')))
   $decimal = 0;
   @else

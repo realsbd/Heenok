@@ -9,6 +9,7 @@ use Razorpay\Api\Api;
 use Yabacon\Paystack;
 use App\Models\Deposits;
 use App\Library\Flutterwave;
+use App\Library\VpayPayment;
 use Illuminate\Http\Request;
 use App\Models\AdminSettings;
 use App\Models\PaymentGateways;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\AdminDepositPending;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
@@ -127,9 +129,9 @@ class AddFundsController extends Controller
         return $this->sendFlutterwave();
         break;
 
-        case 'Vpay':
-            return $this->sendVpay();
-            break;
+      case 'Vpay':
+        return $this->sendVpay();
+        break;
 
       case 'Mollie':
         return $this->sendMollie();
@@ -658,47 +660,52 @@ class AddFundsController extends Controller
     }
   } // End Method mercadoPagoProcess
 
-//    send Vpay payment
-    public function sendVpay()
-    {
-        try {
-//            Get payment gateway
-            $payment = PaymentGateways::whereName('Vpay')->firstOrFail();
+  //    send Vpay payment
+  public function sendVpay()
+  {
+    try {
+      //            Get payment gateway
+      $payment = PaymentGateways::whereName('Vpay')->firstOrFail();
 
-            $fee = $payment->fee;
+      $fee = $payment->fee;
 
-            $taxes = $this->settings->tax_on_wallet ? ($this->request->amount * auth()->user()->isTaxable()->sum('percentage') / 100) : 0;
+      $taxes = $this->settings->tax_on_wallet ? ($this->request->amount * auth()->user()->isTaxable()->sum('percentage') / 100) : 0;
 
-            $amountFixed = number_format($this->request->amount + ($this->request->amount * $fee / 100) + $taxes, 2, '.', '');
+      $amountFixed = number_format($this->request->amount + ($this->request->amount * $fee / 100) + $taxes, 2, '.', '');
 
 
-            // Sends the transaction data to the checkout handler
-            $data = array(
-                'amount'=> $amountFixed,
-                "email"=>auth()->user()->email,
-                "transactionref"=> \Str::random(25),
-            );
-            return  (new Vpay)->handleCheckout($data);
+      // Sends the transaction data to the checkout handler
+      $data = array(
+        'amount' => $amountFixed,
+        "email" => auth()->user()->email,
+        "transactionref" => \Str::random(25),
+        "domain" => env('APP_URL'),
+        "key" => $payment->key,
+        "customer_service_channel" => "Tel: +2348030070000",
+      );
 
-//            dd($payment);
-//            if ($payment['status'] !== 'success') {
-//                return response()->json([
-//                    'success' => false,
-//                    'errors' => ['error' => __('general.error')],
-//                ]);
-//            }
-//
-//            return response()->json([
-//                'success' => true,
-//                'url' => $payment['data']['link']
-//            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'errors' => ['error' => $e->getMessage()],
-            ]);
-        }
+      // Make the HTTP POST request to the route
+      $response = Http::withToken($payment->key)->post(route('payment.redirect'), $data);
+
+      // Return the response from the route
+      if ($response->successful()) {
+        return response()->json([
+          'success' => true,
+          'data' => $response->body(),
+        ]);
+      } else {
+        return response()->json([
+          'success' => false,
+          'error' => $response->body(),
+        ]);
+      }
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'errors' => ['error' => $e->getMessage()],
+      ]);
     }
+  }
 
   public function sendFlutterwave()
   {
