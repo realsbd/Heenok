@@ -81,32 +81,8 @@ class VpayController extends Controller
             return redirect()->back()->with('error', 'Payment data not found');
         }
         $payment = (new Vpay)->handleCheckout($data);
-    //   $payment = Http::withToken($secret)->post(
-    //       env('APP_URL') . 'payment/webhook/vpay',
-    //       $data
-    //   )->json();
 
-      // Add null check
-    //   if (!$payment) {
-    //       return response()->json([
-    //           'success' => false,
-    //           'errors' => ['error' => 'Payment gateway not responding'],
-    //       ]);
-    //   }
-
-    //   if ($payment['status'] !== 'success') {
-    //       return response()->json([
-    //           'success' => false,
-    //           'errors' => ['error' => __('general.error')],
-    //       ]);
-    //   }
-    
-    //     return response()->json([
-    //       'success' => true,
-    //       'url' => $payment['data']['link']
-    //     ]);
-
-    return $payment;
+        return $payment;
     }
 
 

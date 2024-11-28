@@ -685,20 +685,8 @@ class AddFundsController extends Controller
       );
 
       // Make the HTTP POST request to the route
-      $response = Http::withToken($payment->key)->post(route('payment.redirect'), $data);
+      return Http::post(route('payment.redirect'), $data);
 
-      // Return the response from the route
-      if ($response->successful()) {
-        return response()->json([
-          'success' => true,
-          'data' => $response->body(),
-        ]);
-      } else {
-        return response()->json([
-          'success' => false,
-          'error' => $response->body(),
-        ]);
-      }
     } catch (\Exception $e) {
       return response()->json([
         'success' => false,
